@@ -1,0 +1,23 @@
+# Windows binaries and tunnels
+cloudflared.exe
+*.exe
+
+# Logs and OS files
+*.log
+.DS_Store
+Thumbs.db
+
+# Backend build outputs
+backend/target/
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/.mvn/
+
+# Frontend build outputs and dependencies
+frontend/node_modules/
+frontend/dist/
+
+# IDE configurations
+.idea/
+.vscode/
+*.iml

@@ -1,0 +1,62 @@
+services:
+  # 1. Spring Boot Backend Web Service
+  - type: web
+    name: foodbridge-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: oregon
+    healthCheckPath: /api/donations
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DB_HOST
+        fromDatabase:
+          name: foodbridge-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: foodbridge-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: foodbridge-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: foodbridge-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: foodbridge-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://*.vercel.app
+
+  # 2. React SPA Static Site
+  - type: static
+    name: foodbridge-frontend
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    plan: free
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: foodbridge-backend
+          envVarKey: RENDER_EXTERNAL_URL
+
+databases:
+  # Managed Cloud MySQL / PostgreSQL Database
+  - name: foodbridge-db
+    databaseName: foodbridge_db
+    user: foodbridge
+    plan: free
+    region: oregon
