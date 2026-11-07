@@ -10,27 +10,9 @@ services:
     healthCheckPath: /api/donations
     envVars:
       - key: SPRING_PROFILES_ACTIVE
-        value: prod
-      - key: DB_HOST
-        fromDatabase:
-          name: foodbridge-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: foodbridge-db
-          property: port
-      - key: DB_NAME
-        fromDatabase:
-          name: foodbridge-db
-          property: database
-      - key: DB_USERNAME
-        fromDatabase:
-          name: foodbridge-db
-          property: user
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: foodbridge-db
-          property: password
+        value: dev
+      - key: PORT
+        value: 10000
       - key: JWT_SECRET
         generateValue: true
       - key: FRONTEND_URL
@@ -52,11 +34,3 @@ services:
           type: web
           name: foodbridge-backend
           envVarKey: RENDER_EXTERNAL_URL
-
-databases:
-  # Managed Cloud MySQL / PostgreSQL Database
-  - name: foodbridge-db
-    databaseName: foodbridge_db
-    user: foodbridge
-    plan: free
-    region: oregon
